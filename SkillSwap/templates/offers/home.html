@@ -1,0 +1,34 @@
+{%extends 'base.html'%}
+{% block content %}
+    <h1>
+        Добро пожаловать в Архив знаний
+    </h1>
+
+
+        <p>
+            Здесь вы можете создавать,
+            просматривать, редактировать
+            и удалять свои предложеня.
+        </p>
+
+
+        <div class="actions">
+
+            {% comment %} <a
+                class="action-link"
+                href="{% url 'offers:offers_list' %}"
+            >
+                Список предложений
+            </a> {% endcomment %}
+
+
+            <a
+                class="action-link"
+                href="{% url 'offers:offers_create'%}"
+            >
+                Create an offer
+            </a>
+
+        </div>
+
+{% endblock %}

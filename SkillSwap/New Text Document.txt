@@ -1,0 +1,16 @@
+
+@login_required
+def offers_view_list(request: HttpRequest, source) -> HttpResponse:
+    
+    print(f"source is: {source}")
+    if source == 'link_a':
+        offers = Offer.objects.filter(author=request.user)
+        return render(request, 'offers/offers_list.html', {'offers': offers})
+    elif source == '2':
+        offers = Offer.objects.exclude(author=request.user)
+        return render(request, 'offers/offers_delete.html', {'offers': offers})
+
+    else:
+        offers = Offer.objects.filter(author=request.user) 
+        return render(request, 'offers/offers_list.html', {'offers': offers})
+    
