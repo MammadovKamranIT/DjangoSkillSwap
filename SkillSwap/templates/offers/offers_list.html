@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Список заметок
+    Список предложений
 {% endblock %}
 
 {% block content %}
@@ -39,12 +39,19 @@
 
 			<span class="meta-label">Теги</span>
 			
-			<span class="tag-list">
-			
 			{% for tag in offer.tags.all %}
 			
 			<span class="tag-chip">{{ tag }}</span>
-			
+
+			{% if source == 'link_b' %}
+
+			<form method="post" action="{% url 'offers:send_swap_request' offer.id %}">
+        	{% csrf_token %}
+			<button type="submit" class="btn btn-primary">Send a request</button>
+			</form>
+
+			{% endif %}
+
 			{% endfor %}
 
 		</div>

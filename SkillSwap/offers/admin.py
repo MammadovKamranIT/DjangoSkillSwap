@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from offers.models import Offer, Category, Tag
+from offers.models import Offer,  Category, Tag
 from django.contrib.auth import get_user_model
 
 User = get_user_model()

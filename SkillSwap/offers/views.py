@@ -3,8 +3,9 @@ from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render,  get_object_or_404
 from offers import data
 from offers.forms import ContactForm, OfferForm
-from offers.models import Offer, Category, Tag
+from offers.models import Offer, Category
 from django.contrib.auth.decorators import login_required
+from .models import SwapRequest, Skill, User
 
 def index(request: HttpRequest):
 
@@ -25,18 +26,19 @@ def contact(request: HttpRequest):
 
 @login_required
 def offers_view_list(request: HttpRequest, source) -> HttpResponse:
-    
-    print(f"source is: {source}")
+
+
     if source == 'link_a':
         offers = Offer.objects.filter(author=request.user)
-        return render(request, 'offers/offers_list.html', {'offers': offers})
+        return render(request, 'offers/offers_list.html', {'offers': offers, 'source': source})
+    
     elif source == 'link_b':
         offers = Offer.objects.exclude(author=request.user)
-        return render(request, 'offers/offers_list.html', {'offers': offers})
+        return render(request, 'offers/offers_list.html', {'offers': offers,  'source': source})
 
     else:
         offers = Offer.objects.filter(author=request.user) 
-        return render(request, 'offers/offers_list.html', {'offers': offers})
+        return render(request, 'offers/offers_list.html', {'offers': offers, 'source': source})
     
     
 
@@ -110,6 +112,51 @@ def offers_delete (
         messages.success(request, "Offer deleted")
         return redirect('offers:offers_list')
     return render(request, 'offers/offer_delete.html', {'offer': offer})
+
+
+
+
+@login_required
+def send_swap_request(request, offer_id):
+    """Triggered when a user clicks 'Request Swap' on someone's profile."""
+    if request.method == 'POST':
+       
+        offer = get_object_or_404(Offer, id=offer_id)
+        
+        receiver = offer.author
+        
+            
+
+        SwapRequest.objects.create(
+            sender=request.user,
+            receiver=receiver,
+            skill_wanted_id=offer_id,
+            status='PENDING'
+        )
+
+
+        requests = SwapRequest.objects
+        return render(request, 'offers/requests.html', {'requests': requests}) # Redirect to request tracking dashboard
+
+
+
+@login_required
+def manage_request(request, request_id, action):
+    """Handles accepting or rejecting a swap request."""
+    swap_request = get_object_or_404(SwapRequest, id=request_id, receiver=request.user)
+
+    if action == 'accept':
+        swap_request.status = 'ACCEPTED'
+        swap_request.save()
+        # Optional: Initialize a Chat/Message Thread or Video call link here!
+    elif action == 'reject':
+        swap_request.status = 'REJECTED'
+        swap_request.save()
+    
+    requests = SwapRequest.objects
+    
+    return redirect('offer/requests.html', {'requests': requests})
+
 
 
 

@@ -33,10 +33,46 @@ class Tag(models.Model):
             return self.name
 
 
+
+
+class Skill(models.Model):
+    name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='skills')
+
+    def __str__(self):
+        return self.name
+
+class SwapRequest(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('ACCEPTED', 'Accepted'),
+        ('REJECTED', 'Rejected'),
+    ]
+
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
+    offered_skill = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name='offered_in')
+    wanted_skill = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name='wanted_in')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+
+
+
 class Offer(models.Model):
-    
+    STATUS_CHOICES = [
+        ('draft','Draft'),
+        ('published', 'Published'),
+    ]
     title = models.CharField(max_length=100)
     content = models.TextField()
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='draft',
+    )
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
 
@@ -44,13 +80,15 @@ class Offer(models.Model):
     category = models.ForeignKey(
     Category,
     on_delete=models.PROTECT,
-    related_name = 'offers',)
+    related_name = 'offers',
+    verbose_name='Категория',)
 
 
     tags = models.ManyToManyField(
 
-    Tag,
-    related_name = 'offers',
+        Tag,
+        related_name = 'offers',
+        verbose_name='Теги',
             
     )
 
@@ -59,6 +97,7 @@ class Offer(models.Model):
         settings.AUTH_USER_MODEL ,
         on_delete = models.CASCADE,
         related_name='offers',
+        verbose_name='Автор',
             
           
      )
