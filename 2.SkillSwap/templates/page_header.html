@@ -1,0 +1,19 @@
+<header class="site-header">
+
+<nav>
+
+<a href = "{%url 'home'%}">Home</a>
+
+<a href = "{%url 'about'%}">About</a>
+
+<a href = "{%url 'offers:offers_list' source='link_a'%}">List my offers</a>
+<a href = "{%url 'offers:offers_list' source='link_b'%}">List of other users offers</a>
+<a href = "{%url 'offers:offers_list' source='link_e'%}">Requests</a>
+<a href = "{%url 'accounts:register'%}">Register</a>
+<a href = "{%url 'accounts:login'%}">Login</a>
+{% if user.is_authenticated%}
+    <a href = "{%url 'accounts:logout'%}">Logout</a>
+{% endif %}
+</nav>
+
+</header>

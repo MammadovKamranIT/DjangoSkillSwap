@@ -1,0 +1,18 @@
+{%extends "base.html"%}
+{%block title%}
+Dashboard
+{%endblock%}
+
+
+{%block content%}
+
+<h1>Dashboard</h1>
+<h2>User: {{active_user}}</h2>
+<div class="actions">
+<a  class="action-link" href="{% url "offers:offers_create" %}">Create offer</a>
+
+<a  class="action-link"  href="{% url 'offers:offers_list' source='link_d' %}">Offers List</a>
+
+<a  class="action-link"  href="{% url "home" %}">Return to home page</a>
+</div>
+{%endblock content%}
