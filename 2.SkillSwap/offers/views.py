@@ -1,11 +1,12 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden, request
 from django.shortcuts import redirect, render,  get_object_or_404
+import requests
 from offers import data
 from offers.forms import ContactForm, OfferForm
 from offers.models import Offer, Category
 from django.contrib.auth.decorators import login_required
-from .models import SwapRequest, Skill, User
+from .models import SwapRequest, User
 
 def index(request: HttpRequest):
 
@@ -27,6 +28,7 @@ def contact(request: HttpRequest):
 @login_required
 def offers_view_list(request: HttpRequest, source) -> HttpResponse:
 
+    print(f"offers_view_list called with source: {source}")
 
     if source == 'link_a':
         offers = Offer.objects.filter(author=request.user)
@@ -125,41 +127,34 @@ def send_swap_request(request, offer_id):
         
         receiver = offer.author
         
-            
 
+            
         SwapRequest.objects.create(
+
             sender=request.user,
             receiver=receiver,
-            wanted_skill=Offer.objects.get(id=offer_id),
-            status='PENDING'
+            wanted_skill=offer
+    
         )
+        
+
+        offers = Offer.objects.exclude(author=request.user)
 
 
-        requests = SwapRequest.objects.all()
-        return render(request, 'offers/requests.html', {'requests': requests}) # Redirect to request tracking dashboard
+        return  render(request, 'offers/offers_list.html', {'offers': offers})
 
 
 
 @login_required
-def manage_request(request, request_id, action):
-    """Handles accepting or rejecting a swap request."""
-    swap_request = get_object_or_404(SwapRequest, id=request_id, receiver=request.user)
+def get_swap_request(request):
+    print("get_swap_request called")
 
-    if action == 'accept':
-        swap_request.status = 'ACCEPTED'
-        swap_request.save()
-        # Optional: Initialize a Chat/Message Thread or Video call link here!
-    elif action == 'reject':
-        swap_request.status = 'REJECTED'
-        swap_request.save()
-    
-    requests = SwapRequest.objects
-    
-    return redirect('offer/requests.html', {'requests': requests})
+    requests = SwapRequest.objects.filter(receiver=request.user)
 
 
 
-
+    return render(request, 'offers/requests.html', {'requests': requests}) 
+  
 # def register_view(request):
 #     user = User.objects.create_user(
 

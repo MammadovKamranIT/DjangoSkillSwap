@@ -35,14 +35,6 @@ class Tag(models.Model):
 
 
 
-class Skill(models.Model):
-    name = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='skills')
-
-    def __str__(self):
-        return self.name
-
-
 
 class Offer(models.Model):
     STATUS_CHOICES = [
@@ -99,17 +91,10 @@ class Offer(models.Model):
 
 
 class SwapRequest(models.Model):
-    STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('ACCEPTED', 'Accepted'),
-        ('REJECTED', 'Rejected'),
-    ]
+  
 
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
     wanted_skill = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='wanted_in')
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
-    created_at = models.DateTimeField(auto_now_add=True)
-
 
 

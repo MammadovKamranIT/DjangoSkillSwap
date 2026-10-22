@@ -15,45 +15,22 @@
 	{%for request in requests%}
 	
 	<li>
+
+
 		<a href ="{% url 'offers:offers_detail' request.id %}">
-			<span class="offer-title">{{ request.skill_wanted }}</span>
+			
+			<span class="offer-title">Requested offer: {{request.wanted_skill}} <p> Sender: {{request.sender}}</span>
+
 		</a>
-			
-		<div class="offer-meta">
-					
-			<span class="meta-label">Skill offered</span>
-				
-			{% if request.offered == "backend" %}
-			
-			<span class="meta-badge">{{ request.offered }}</span>
-			
-			{% elif request.offered == "devops" %}
-			
-			<span class="meta-badge">{{ request.offered }}</span>
-				
-			{% else %}
-			
-			<span class="meta-badge">{{ request.offered }}</span>
-			
-			{% endif %}
-
-			<span class="meta-label">Status</span>
-			
-			
-			<span class="tag-chip">{{ request.status }}</span>
-
-			
-
-
-			{% endfor %}
-
-		</div>
+			 
 
 	</li>
 
+	{% empty %}
 	
 	<li class="empty-message">Список предложений пуст</li>
-
+	
+	{% endfor %}
 
 </ul>
 
