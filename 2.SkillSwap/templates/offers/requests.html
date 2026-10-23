@@ -17,12 +17,12 @@
 	<li>
 
 
-		<a href ="{% url 'offers:offers_detail' request.id %}">
+	
 			
 			<span class="offer-title">Requested offer: {{request.wanted_skill}} <p> Sender: {{request.sender}}</span>
+				<a class="action-link" href="{% url 'offers:delete_swap_request' request.id %}">Delete</a>
 
-		</a>
-			 
+		
 
 	</li>
 

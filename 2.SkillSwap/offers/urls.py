@@ -16,6 +16,7 @@ path('update/<int:offer_id>/', views.offers_update, name='offers_update'),
 path('delete/<int:offer_id>/', views.offers_delete, name='offers_delete'),
 path('feedback/', views.contact, name='offers_feedback'),
 path('request/send/<int:offer_id>/', views.send_swap_request, name='send_swap_request'),
+path('request/delete/<int:request_id>/', views.delete_swap_request, name='delete_swap_request'),
 
 
 

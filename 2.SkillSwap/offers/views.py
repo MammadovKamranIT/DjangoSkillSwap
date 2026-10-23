@@ -28,7 +28,6 @@ def contact(request: HttpRequest):
 @login_required
 def offers_view_list(request: HttpRequest, source) -> HttpResponse:
 
-    print(f"offers_view_list called with source: {source}")
 
     if source == 'link_a':
         offers = Offer.objects.filter(author=request.user)
@@ -137,23 +136,38 @@ def send_swap_request(request, offer_id):
     
         )
         
+        source = 'link_b'
 
         offers = Offer.objects.exclude(author=request.user)
-
-
-        return  render(request, 'offers/offers_list.html', {'offers': offers})
+        return render(request, 'offers/offers_list.html', {'offers': offers, 'source': source})
+  
 
 
 
 @login_required
 def get_swap_request(request):
-    print("get_swap_request called")
+
 
     requests = SwapRequest.objects.filter(receiver=request.user)
 
 
 
     return render(request, 'offers/requests.html', {'requests': requests}) 
+
+
+
+
+@login_required
+def delete_swap_request(request, request_id):
+
+
+    request = SwapRequest.objects.filter(id=request_id)
+
+    request.delete()
+
+
+    return redirect('offers:requests') 
+  
   
 # def register_view(request):
 #     user = User.objects.create_user(
