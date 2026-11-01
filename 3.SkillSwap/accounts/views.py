@@ -38,13 +38,14 @@ def login_view(request):
 
 def register_view(request):
     if request.method == "POST":
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             User = get_user_model()
             user= User.objects.create_user(
                 username= form.cleaned_data["username"],
                 email = form.cleaned_data["email"],
-                password = form.cleaned_data["password"]
+                password = form.cleaned_data["password"],
+                avatar = form.cleaned_data["avatar"]
              
             )
 

@@ -19,6 +19,8 @@ from django.urls import include, path
 
 from offers import views as offers_views
 
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     
@@ -32,4 +34,4 @@ path('about/', offers_views.about, name='about' ),
 
 path('accounts/', include('accounts.urls')),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
