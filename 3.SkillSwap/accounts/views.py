@@ -45,9 +45,13 @@ def register_view(request):
                 username= form.cleaned_data["username"],
                 email = form.cleaned_data["email"],
                 password = form.cleaned_data["password"],
-                avatar = form.cleaned_data["avatar"]
-             
+               
             )
+
+            if form.cleaned_data.get("avatar"):
+                user.avatar = form.cleaned_data["avatar"]
+                user.save()
+   
 
             login(request, user)
             messages.success(request, "Thank you for registering")
