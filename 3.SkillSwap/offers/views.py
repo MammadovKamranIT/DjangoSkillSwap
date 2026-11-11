@@ -150,6 +150,16 @@ def get_swap_request(request):
 
     requests = SwapRequest.objects.filter(receiver=request.user)
 
+    
+   
+    # if action == 'accept':
+    #    requests. = 'ACCEPTED'
+    #    messages.success(request, "Swap request accepted!")
+    # elif action == 'reject':
+    #    swap_request.status = 'REJECTED'
+    #    messages.info(request, "Swap request declined.")
+        
+    # swap_request.save()
 
 
     return render(request, 'offers/requests.html', {'requests': requests}) 

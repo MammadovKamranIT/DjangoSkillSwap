@@ -5,8 +5,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    # your custom fields here
-    pass
+   pass # your custom fields here
 
 
 # Create your models here.
@@ -91,10 +90,19 @@ class Offer(models.Model):
 
 
 class SwapRequest(models.Model):
+
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('ACCEPTED', 'Accepted'),
+        ('REJECTED', 'Rejected'),
+
+    ]
   
 
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
     wanted_skill = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='wanted_in')
+
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
 
 

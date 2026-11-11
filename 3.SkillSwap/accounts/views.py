@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from accounts.models import Profile
 
-from accounts.forms import LoginForm, RegisterForm
+
+from accounts.forms import LoginForm, ProfileImageForm, RegisterForm
 
 from django.contrib.auth import authenticate, get_user_model, login, logout
 
@@ -25,7 +27,6 @@ def login_view(request):
                     user = authenticate(request, username=candidate.username, password=password)
             if user is not None:
                 login(request, user)
-                request.session["active_user"] = user.get_username()
                 messages.success(request, "You are now logged in.")
                 return redirect('accounts:dashboard')
             form.add_error(None, "Invalid username or password.")
@@ -38,32 +39,53 @@ def login_view(request):
 
 def register_view(request):
     if request.method == "POST":
-        form = RegisterForm(request.POST, request.FILES)
+        
+        form = RegisterForm(request.POST)
+        profile_form = ProfileImageForm(request.POST, request.FILES)
         if form.is_valid():
+           
             User = get_user_model()
             user= User.objects.create_user(
                 username= form.cleaned_data["username"],
                 email = form.cleaned_data["email"],
                 password = form.cleaned_data["password"],
+                
                
             )
 
-            if form.cleaned_data.get("avatar"):
-                user.avatar = form.cleaned_data["avatar"]
-                user.save()
-   
+
+            profile = profile_form.save(commit=False)
+
+            profile.user = user
+        
+            # Cloudinary seamlessly intercepts the file here during save
+            profile.save() 
 
             login(request, user)
             messages.success(request, "Thank you for registering")
             return redirect("accounts:dashboard")
     else:
         form = RegisterForm()
-    return render (request, 'accounts/register.html', {"form": form})
+        profile_form = ProfileImageForm(request.POST, request.FILES)
+    
+    context = {
+
+        'form': form,
+        'profile_form': profile_form
+
+    }
+
+    return render (request, 'accounts/register.html', context)
 
 
 
 def dashboard_view(request):
-    return render(request, 'accounts/dashboard.html', {'active_user': request.session.get('active_user','Guest')}, )
+      
+
+
+
+    
+    return render(request, 'accounts/dashboard.html', {'active_user': request.user}, )
 
 
 @login_required

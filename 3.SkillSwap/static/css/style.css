@@ -610,6 +610,13 @@ form button:active {
     letter-spacing: 0.8px;
 }
 
+.profile-container > img {
+
+width: 150px;
+height: 150px;
+
+}
+
 .delete-warning p {
     margin: 8px 0;
     color: #555e56;

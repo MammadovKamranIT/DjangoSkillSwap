@@ -1,3 +1,4 @@
+
 from typing import Any
 
 from django import forms
@@ -5,10 +6,13 @@ from django.contrib.auth import get_user_model, models
 
 from django.db import models
 from django.contrib.auth.models import User
+from accounts.models import Profile
 
 
+User = get_user_model()
 
 class RegisterForm(forms.Form):
+
     username = forms.CharField(
         label='Username',
         max_length=100,
@@ -27,9 +31,10 @@ class RegisterForm(forms.Form):
             })
     )
 
-    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True)
 
+    avatar = forms.ImageField
 
+  
     password = forms.CharField(
         label='Password',
         widget=forms.PasswordInput(
@@ -69,6 +74,22 @@ class RegisterForm(forms.Form):
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords do not match!")
         return cleaned_data
+    
+    class Meta:
+        model = User
+    
+
+
+
+
+
+class ProfileImageForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['profile_image']
+
+
+
 
 class LoginForm(forms.Form):
     username_or_email = forms.CharField(

@@ -10,10 +10,8 @@ Dashboard
 <h2>User: {{active_user}}</h2>
 <div class="profile-container">
     <!-- Renders the Cloudinary hosted URL -->
-    <img src="{{ active_user.profile.avatar.url }}" alt="{{ active_user.username }}'s avatar" class="avatar-img">
+    <img src="{{ active_user.profile.profile_image.url }}" alt="{{ active_user }}'s avatar" class="avatar-img">
     
-    <h3>{{ active_user.username }}</h3>
-    <p>{{ active_user.profile.bio }}</p>
 </div>
 
 <div class="actions">
