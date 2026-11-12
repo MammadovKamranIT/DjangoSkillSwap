@@ -24,23 +24,34 @@ def contact(request: HttpRequest):
     return render(request, 'offers/contact.html', {'form': form})
 
 
+def offers_view_list(request: HttpRequest | None = None, source : str | None = None ) -> HttpResponse:
 
-@login_required
-def offers_view_list(request: HttpRequest, source) -> HttpResponse:
-
-
-    if source == 'link_a':
-        offers = Offer.objects.filter(author=request.user)
-        return render(request, 'offers/offers_list.html', {'offers': offers, 'source': source})
+   
     
-    elif source == 'link_b':
-        offers = Offer.objects.exclude(author=request.user)
-        return render(request, 'offers/offers_list.html', {'offers': offers,  'source': source})
+    if request.user.is_authenticated:
+    
+        if source == 'link_a':
+            offers = Offer.objects.filter(author=request.user)
+            return render(request, 'offers/offers_list.html', {'offers': offers, 'source': source})
+    
+        elif source == 'link_b':
+            offers = Offer.objects.exclude(author=request.user)
+            return render(request, 'offers/offers_list.html', {'offers': offers,  'source': source})
+
+        else:
+            offers = Offer.objects.filter(author=request.user) 
+            return render(request, 'offers/offers_list.html', {'offers': offers, 'source': source})
 
     else:
-        offers = Offer.objects.filter(author=request.user) 
-        return render(request, 'offers/offers_list.html', {'offers': offers, 'source': source})
-    
+
+        if source == 'link_a':
+
+            return HttpResponseForbidden("You must sign in to see your offers")
+            
+        else: 
+            
+            offers = Offer.objects.all()
+            return render(request, 'offers/offers_list.html', {'offers': offers})
     
 
 
@@ -145,24 +156,35 @@ def send_swap_request(request, offer_id):
 
 
 @login_required
+
 def get_swap_request(request):
 
 
     requests = SwapRequest.objects.filter(receiver=request.user)
 
+
+    return render(request, 'offers/requests.html', {'requests': requests}) 
+
+
+
+
+
+@login_required
+def update_request_status(request, pk, status):
+
+    req_obj = get_object_or_404(SwapRequest, pk=pk)
+
+    req_obj.status = status
+
+    req_obj.save()
+
     
-   
-    # if action == 'accept':
-    #    requests. = 'ACCEPTED'
-    #    messages.success(request, "Swap request accepted!")
-    # elif action == 'reject':
-    #    swap_request.status = 'REJECTED'
-    #    messages.info(request, "Swap request declined.")
-        
-    # swap_request.save()
+    requests = SwapRequest.objects.filter(receiver=request.user)
 
 
     return render(request, 'offers/requests.html', {'requests': requests}) 
+
+
 
 
 

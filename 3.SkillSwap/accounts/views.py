@@ -82,8 +82,6 @@ def register_view(request):
 def dashboard_view(request):
       
 
-
-
     
     return render(request, 'accounts/dashboard.html', {'active_user': request.user}, )
 
